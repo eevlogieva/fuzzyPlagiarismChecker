@@ -2,9 +2,12 @@ import ssdeep
 import os
 
 
+TRESHOLD = 21
+
+
 class Comparator:
-    def __init__(self, similarityTreshold):
-        self.similarityTreshold = similarityTreshold
+    # def __init__(self, similarityTreshold):
+    #     self.similarityTreshold = similarityTreshold
 
     def compare(self, firstFileName, secondName):
         hash1 = ssdeep.hash_from_file(firstFileName)
@@ -17,7 +20,7 @@ class Comparator:
             for dirName, subdirList, fileList in os.walk(secondName):
                 for fname in fileList:
                     # print("Checking file: " + dirName + '/' + fname)
-                    if ssdeep.compare(hash1, ssdeep.hash_from_file(dirName + '/' + fname)) > self.similarityTreshold:
+                    if ssdeep.compare(hash1, ssdeep.hash_from_file(dirName + '/' + fname)) > TRESHOLD:
                         fullFileName = str(dirName + '/' + fname)
                         # print("filename is: " + fullFileName)
                         similar_files.append(fullFileName)
