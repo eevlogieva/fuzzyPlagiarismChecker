@@ -1,38 +1,17 @@
 from argument_parser import ArgParser
-from usecases import compare2Files
+from usecases import compareTwoFiles, isFileStructureTheSame, isDirStructureTheSame, compareFile2Dir
 
 TRESHOLD = 21
-
-
-def console():
-    # isRequiredTagsPresent = False
-    # try:
-        # requiredTagsFile = open("requiredTagsStructure.txt", 'r')
-        # isRequiredTagsPresent = True
-    # except FileNotFoundError as e:
-        # pass
-
-    # tagsFile = open("tags.txt", 'w')
-    # contentsFile = open("content.txt", 'w')
-
-    fileNameToCheck = input("Input the filename to be checked: ")
-    return fileNameToCheck
 
 
 if __name__ == '__main__':
     parser = ArgParser()
 
-    if parser.getUsecase() == "cmp2files":
-        print(compare2Files(parser.getFile1(), parser.getFile2()))
-
-    # parser = MyHTMLParser("tags.txt", "content.txt")
-    # parser.feed(content)
-
-    # if isRequiredTagsPresent:
-        # validateRequiredTags(requiredTagsFile, open("tags.txt", 'r'))
-    # fileName2ToCheck = input("Input the second filename to be checked: ")
-    # file2ToCheck = open(fileName2ToCheck, 'r')
-
-    # comparator = Comparator()
-
-    # print("Percentage similarity: " + str(comparator.compare(fileNameToCheck, fileName2ToCheck)))
+    if parser.getUsecase() == "cmpTwoFiles":
+        return compareTwoFiles(parser.getFile1(), parser.getFile2())
+    elif parser.getUsecase() == "checkStructure":
+        return isFileStructureTheSame(parser.getStructureFile(), parser.getFile1())
+    elif parser.getUsecase() == "checkStructureDir":
+        return isDirStructureTheSame(parser.getStructureFile(), parser.getDir())
+    elif parser.getUsecase() == "cmpFile2Dir":
+        return compareFile2Dir(parser.getFile1(), parser.getDir())
