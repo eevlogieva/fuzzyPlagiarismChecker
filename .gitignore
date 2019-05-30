@@ -1,0 +1,6 @@
+# Byte-compiled / optimized / DLL files
+checker/__pycache__/
+tests/__pycache__/
+checker/*.py[cod]
+tests/*.py[cod]
+

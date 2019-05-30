@@ -15,22 +15,30 @@ def isFileStructureTheSame(structureFile, file1):
     realStructure = htmlParser.getTags()
     requiredStructure = removeAllWhitespace(open(structureFile, 'r').read())
 
-    return realStructure == requiredStructure
+    if not realStructure == requiredStructure:
+        comparator = Comparator()
+        return (False, comparator.compareStrings(realStructure, requiredStructure))
+    return True
 
 
 def isDirStructureTheSame(structureFile, dirToCheck):
     filesWrongStructure = []
     for dirName, subdirList, fileList in os.walk(dirToCheck):
         for fname in fileList:
-            if str(fname).endswith('.html') and isFileStructureTheSame(structureFile, dirName + '/' + fname) is False:
-                filesWrongStructure.append(dirName + '/' + fname)
+            if str(fname).endswith('.html') and (isFileStructureTheSame(structureFile, os.path.join(dirName, fname)) == (False, 0)):
+                filesWrongStructure.append(os.path.join(dirName, fname))
 
-    print(filesWrongStructure)
     if len(filesWrongStructure) == 0:
         return True
     else:
         return filesWrongStructure
 
 
-# def compareFile2Dir(file1, dirToCheck):
-    
+def compareFile2Dir(file1, dirToCheck):
+    comparator = Comparator()
+    return comparator.compare(file1, dirToCheck)
+
+
+def compareFilesInDir(dirToCheck):
+    comparator = Comparator()
+    return comparator.extractSimilarFiles(dirToCheck)

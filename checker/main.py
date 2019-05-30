@@ -1,11 +1,10 @@
-from argument_parser import ArgParser
-from usecases import compareTwoFiles, isFileStructureTheSame, isDirStructureTheSame, compareFile2Dir
+from checker.argument_parser import ArgParser
+from checker.usecases import *
+import sys
 
-TRESHOLD = 21
 
-
-if __name__ == '__main__':
-    parser = ArgParser()
+def calculateResult(arguments):
+    parser = ArgParser(arguments)
 
     if parser.getUsecase() == "cmpTwoFiles":
         return compareTwoFiles(parser.getFile1(), parser.getFile2())
@@ -15,3 +14,10 @@ if __name__ == '__main__':
         return isDirStructureTheSame(parser.getStructureFile(), parser.getDir())
     elif parser.getUsecase() == "cmpFile2Dir":
         return compareFile2Dir(parser.getFile1(), parser.getDir())
+    elif parser.getUsecase() == "cmpFilesInDir":
+        return compareFilesInDir(parser.getDir())
+
+
+if __name__ == '__main__':
+    print(sys.argv)
+    print(calculateResult(sys.argv))
