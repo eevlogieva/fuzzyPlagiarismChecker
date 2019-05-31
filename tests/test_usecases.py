@@ -1,31 +1,34 @@
 from checker.usecases import compareTwoFiles, isFileStructureTheSame, isDirStructureTheSame
 
+from pytest import mark
+
 import os
 
 
+@mark.usecases
 class UsecasesTests:
     def test_compareTwoFiles_sameFiles(self):
-        assert compareTwoFiles('./tests/resources/textFile.txt', './tests/resources/textFile.txt') == 100
+        assert compareTwoFiles('./resources/textFile.txt', './resources/textFile.txt') == 100
 
     def test_compareTwoFiles_differentFiles(self):
-        assert compareTwoFiles('./tests/resources/textFile.txt', './tests/resources/simpleFile.html') == 0
+        assert compareTwoFiles('./resources/textFile.txt', './resources/simpleFile.html') == 0
 
     def test_isFileStructureTheSame_expectTrue(self):
-        assert isFileStructureTheSame('./tests/resources/simpleStructure.txt', './tests/resources/simpleFile.html') is True
+        assert isFileStructureTheSame('./resources/simpleStructure.txt', './resources/simpleFile.html') is True
 
     def test_isFileStructureTheSame_expectFalse(self):
-        assert isFileStructureTheSame('./tests/resources/complicatedStructure.txt', './tests/resources/simpleFile.html') == (False, 0)
+        assert isFileStructureTheSame('./resources/complicatedStructure.txt', './resources/simpleFile.html') == (False, 0)
 
     def test_isDirStructureTheSame_expectTrue(self):
-        assert isDirStructureTheSame('./tests/resources/simpleStructure.txt', './tests/resources') is True
+        assert isDirStructureTheSame('./resources/simpleStructure.txt', './resources') is True
 
     def test_isDirStructureTheSame_expectFalse(self):
-        diffStructFile = open('./tests/resources/wrongStruct.html', 'w')
+        diffStructFile = open('./resources/wrongStruct.html', 'w')
         diffStructFile.write('<head>Head</head>')
-        assert isDirStructureTheSame('./tests/resources/simpleStructure.txt', './tests/resources') == ['./tests/resources/wrongStruct.html']
+        assert isDirStructureTheSame('./resources/simpleStructure.txt', './resources') == ['./resources/wrongStruct.html']
 
     def teardown_method(self):
         try:
-            os.remove('./tests/resources/wrongStruct.html')
+            os.remove('./resources/wrongStruct.html')
         except FileNotFoundError:
             pass
