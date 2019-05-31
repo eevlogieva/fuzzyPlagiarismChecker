@@ -1,6 +1,11 @@
 # Byte-compiled / optimized / DLL files
 checker/__pycache__/
+checker/argParser/__pycache__/
+checker/htmlParser/__pycache__/
+checker/ssdeepComparator/__pycache__/
 tests/__pycache__/
+tests/integrationtests/__pycache__/
+tests/htmlParser/__pycache__/
 checker/*.py[cod]
 tests/*.py[cod]
 

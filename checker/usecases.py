@@ -1,5 +1,5 @@
-from checker.ssdeep_comparator import Comparator
-from checker.html_parser import MyHTMLParser, removeAllWhitespace
+from checker.ssdeepComparator.ssdeep_comparator import Comparator
+from checker.htmlParser.html_parser import MyHTMLParser, removeAllWhitespace
 
 import os
 
@@ -21,6 +21,7 @@ def isFileStructureTheSame(structureFile, file1):
     return True
 
 
+# returns an array of the files that do not conform to the given structure
 def isDirStructureTheSame(structureFile, dirToCheck):
     filesWrongStructure = []
     for dirName, subdirList, fileList in os.walk(dirToCheck):

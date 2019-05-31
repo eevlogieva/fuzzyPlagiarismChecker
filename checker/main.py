@@ -1,4 +1,4 @@
-from checker.argument_parser import ArgParser
+from checker.argParser.argument_parser import ArgParser
 from checker.usecases import *
 import sys
 
@@ -19,5 +19,4 @@ def calculateResult(arguments):
 
 
 if __name__ == '__main__':
-    print(sys.argv)
-    print(calculateResult(sys.argv))
+    print(calculateResult(sys.argv[1:]))
