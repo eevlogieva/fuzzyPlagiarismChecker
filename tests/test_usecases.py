@@ -20,12 +20,13 @@ class UsecasesTests:
         assert isFileStructureTheSame('./resources/complicatedStructure.txt', './resources/simpleFile.html') == (False, 0)
 
     def test_isDirStructureTheSame_expectTrue(self):
-        assert isDirStructureTheSame('./resources/simpleStructure.txt', './resources') is True
+        assert isDirStructureTheSame('./resources/simpleStructure.txt', './resources/toTestDirStructureTheSame') is True
 
     def test_isDirStructureTheSame_expectFalse(self):
         diffStructFile = open('./resources/wrongStruct.html', 'w')
         diffStructFile.write('<head>Head</head>')
-        assert isDirStructureTheSame('./resources/simpleStructure.txt', './resources') == ['./resources/wrongStruct.html']
+        result = isDirStructureTheSame('./resources/simpleStructure.txt', './resources')
+        assert './resources/wrongStruct.html' in result
 
     def teardown_method(self):
         try:

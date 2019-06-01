@@ -1,6 +1,7 @@
 import ssdeep
 import os
 
+from checker.htmlParser.html_parser import MyHTMLParser, removeAllWhitespace
 
 TRESHOLD = 21
 
@@ -8,11 +9,11 @@ TRESHOLD = 21
 class Comparator:
 
     def compare(self, firstFileName, secondFileOrDirName):
-        hash1 = ssdeep.hash_from_file(firstFileName)
+        hash1 = self.hashContentOfFile(firstFileName)
 
         if os.path.isfile(secondFileOrDirName):
             secondFileName = secondFileOrDirName
-            hash2 = ssdeep.hash_from_file(secondFileName)
+            hash2 = self.hashContentOfFile(secondFileName)
             return ssdeep.compare(hash1, hash2)
         else:
             dirToCheck = secondFileOrDirName
@@ -46,7 +47,7 @@ class Comparator:
         for dirName, subdirList, fileList in os.walk(dirToProcess):
                 for fname in fileList:
                     filePath = os.path.join(dirName, fname)
-                    hashedFiles.append((ssdeep.hash_from_file(filePath), filePath))
+                    hashedFiles.append((self.hashContentOfFile(filePath), filePath))
         return hashedFiles
 
     def compareStrings(self, str1, str2):
@@ -54,3 +55,15 @@ class Comparator:
         hash2 = ssdeep.hash(str2)
 
         return ssdeep.compare(hash1, hash2)
+
+    def hashContentOfFile(self, fileName):
+        try:
+            if fileName.split('.')[-1] == 'html':
+                htmlParser = MyHTMLParser()
+                htmlParser.feed(open(fileName, 'r').read())
+                content = removeAllWhitespace(htmlParser.getContent())
+                return ssdeep.hash(content)
+            else:
+                return ssdeep.hash_from_file(fileName)
+        except IndexError:
+            return ssdeep.hash_from_file(fileName)
