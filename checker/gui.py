@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-from ssdeep_comparator import Comparator
+from ssdeepComparator.ssdeep_comparator import Comparator
 
 
 def extract_filenames():

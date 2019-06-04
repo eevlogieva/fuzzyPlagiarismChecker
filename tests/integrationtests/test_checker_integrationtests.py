@@ -37,3 +37,7 @@ class IntegrationTests:
         expectedFile = './resources/simpleFile.html'
         expectedFile2 = './resources/copyOfSimpleFile.html'
         assert expectedFile in result or expectedFile2 in result
+
+    def test_cmpFilesInDir_expectNoSameFiles(self):
+        result = calculateResult(['--usecase', 'cmpFilesInDir', '--dir', './resources/toTestRestrictedFiles'])
+        assert result == {}

@@ -19,4 +19,4 @@ def calculateResult(arguments):
 
 
 if __name__ == '__main__':
-    print(calculateResult(sys.argv[1:]))
+    print(calculateResult(sys.argv[1:])

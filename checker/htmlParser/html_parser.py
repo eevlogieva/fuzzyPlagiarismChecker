@@ -24,5 +24,4 @@ class MyHTMLParser(HTMLParser):
 
 
 def removeAllWhitespace(string):
-    # TODO regexp
-    return string.strip().replace(" ", "").replace("\n", "").replace("\t", "")
+    return string.lower().strip().replace(" ", "").replace("\n", "").replace("\t", "")
