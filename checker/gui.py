@@ -19,18 +19,38 @@ class GUI:
         window.Close()
         return USECASES_DICT[usecase_arr[0]]
 
-    def extractFilenames(self):
+    def extractFiles(self):
         window = sg.Window('Compare two files for similarities')
         event, (filename, filename2) = window. Layout([[sg.Text('First file')], [sg.Input(), sg.FileBrowse()], 
             [sg.Text('Second file')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()]]).Read()
         window.Close()
         return (filename, filename2)
 
-    def extract_file_and_dir(self):
-        event, (filename, dirname) = sg.Window('Get filename to check'). Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()],
-            [sg.Text('Dirname')], [sg.Input(), sg.FolderBrowse()], [sg.OK(), sg.Cancel()]]).Read()
+    def extractStructureFileAndFile1(self):
+        window = sg.Window('Check the structure of a html file')
+        event, (structureFilename, filename1) = window. Layout([[sg.Text('Structure file')], [sg.Input(), sg.FileBrowse()], 
+            [sg.Text('File to check')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()]]).Read()
+        window.Close()
+        return (structureFilename, filename1)
+
+    def extractFileAndDir(self):
+        event, (filename, dirname) = sg.Window('Compare a single file to all files in dir'). Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()],
+            [sg.Text('Dir to check')], [sg.Input(), sg.FolderBrowse()], [sg.OK(), sg.Cancel()]]).Read()
 
         return (filename, dirname)
+
+    def extractStructureFileAndDir(self):
+        event, (structureFilename, dirname) = sg.Window('Check the structure of html files in dir'). Layout([[sg.Text('Structure file')], [sg.Input(), sg.FileBrowse()],
+            [sg.Text('Dir to check')], [sg.Input(), sg.FolderBrowse()], [sg.OK(), sg.Cancel()]]).Read()
+
+        return (structureFilename, dirname)
+
+    def extractDir(self):
+        window = sg.Window('Compare all the files in a dir')
+        event, dirname = window. Layout([[sg.Text('Dir to check')], [sg.Input(), sg.FolderBrowse()], 
+            [sg.OK(), sg.Cancel()]]).Read()
+        window.Close()
+        return dirname
 
     def popupResult(self, stringToPrint):
         sg.Popup(stringToPrint)
@@ -47,14 +67,21 @@ if __name__ == '__main__':
     usecase = gui.extractUsecase()
 
     if usecase == 'cmpTwoFiles':
-        file1, file2 = gui.extractFilenames()
+        file1, file2 = gui.extractFiles()
         gui.popupResult(compareTwoFiles(file1, file2))
+
     elif usecase == 'checkStructure':
-        print(isFileStructureTheSame(parser.getStructureFile(), parser.getFile1()))
+        structureFile, file1 = gui.extractStructureFileAndFile1()
+        gui.popupResult(isFileStructureTheSame(structureFile, file1))
+
     elif usecase == 'checkStructureDir':
-        print(isDirStructureTheSame(parser.getStructureFile(), parser.getDir()))
+        structureFile, dirToCheck = gui.extractStructureFileAndDir()
+        gui.popupResult(isDirStructureTheSame(structureFile, dirToCheck))
+
     elif usecase == 'cmpFile2Dir':
-        print(compareFile2Dir(parser.getFile1(), parser.getDir()))
+        file1, dirToCheck = gui.extractFileAndDir()
+        gui.popupResult(compareFile2Dir(file1, dirToCheck))
+
     elif usecase == 'cmpFilesInDir':
-        print(compareFilesInDir(parser.getDir()))
-    # print(usecase)
+        dirToCheck = gui.extractDir()
+        gui.popupResult(compareFilesInDir(dirToCheck))
