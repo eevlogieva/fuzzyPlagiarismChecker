@@ -83,5 +83,5 @@ if __name__ == '__main__':
         gui.popupResult(compareFile2Dir(file1, dirToCheck))
 
     elif usecase == 'cmpFilesInDir':
-        dirToCheck = gui.extractDir()
+        dirToCheck = gui.extractDir()[0]
         gui.popupResult(compareFilesInDir(dirToCheck))

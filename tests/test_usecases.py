@@ -1,4 +1,4 @@
-from checker.usecases import compareTwoFiles, isFileStructureTheSame, isDirStructureTheSame
+from checker.usecases import compareTwoFiles, isFileStructureTheSame, isDirStructureTheSame, compareFilesInDir
 
 from pytest import mark, raises
 
@@ -38,6 +38,16 @@ class UsecasesTests:
         diffStructFile.write('<head>Head</head>')
         result = isDirStructureTheSame('./resources/simpleStructure.txt', './resources')
         assert './resources/tempFile.html' in result
+
+    def test_compareFilesInDir_expectTwoFIlesSame(self):
+        result = compareFilesInDir('./resources')
+        expectedFile = './resources/simpleFile.html'
+        expectedFile2 = './resources/copyOfSimpleFile.html'
+        assert expectedFile in result or expectedFile2 in result
+
+    def test_compareFilesInDir_expectNoSameFiles(self):
+        result = compareFilesInDir('./resources/toTestRestrictedFiles')
+        assert result == {}
 
     def teardown_method(self):
         try:
