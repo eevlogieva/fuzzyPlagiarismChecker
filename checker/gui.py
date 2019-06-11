@@ -4,7 +4,7 @@ from checker.usecases import *
 
 USECASES_DICT = {
     'Compare two files': 'cmpTwoFiles',
-    'Check the structure of a html file': 'checkStructure',
+    'Check the structure of an html file': 'checkStructure',
     'Check the structure of html files in dir': 'checkStructureDir',
     'Compare a single file to all files in dir': 'cmpFile2Dir',
     'Compare all the files in a dir': 'cmpFilesInDir'
@@ -27,7 +27,7 @@ class GUI:
         return (filename, filename2)
 
     def extractStructureFileAndFile1(self):
-        window = sg.Window('Check the structure of a html file')
+        window = sg.Window('Check the structure of an html file')
         event, (structureFilename, filename1) = window. Layout([[sg.Text('Structure file')], [sg.Input(), sg.FileBrowse()], 
             [sg.Text('File to check')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()]]).Read()
         window.Close()
@@ -100,7 +100,7 @@ if __name__ == '__main__':
             message = 'The file complies with the given structure. \n'
         else:
             message = 'The file does not comply with the given structure. \n'
-        message += ('Percentage similarities between the structures: ' + str(percentage))
+            message += ('Percentage similarities between the structures: ' + str(percentage))
 
         gui.popupResult(message)
 
@@ -110,7 +110,7 @@ if __name__ == '__main__':
         isSame = result[0]
         wrongFiles = result[1:]
         if isSame is True:
-            message = 'The files in the dir complies with the given structure. \n'
+            message = 'All the files in the dir comply with the given structure. \n'
         else:
             message = 'Some files do not comply with the given structure. \n These files are: [' + ',\n'.join(wrongFiles) + ']'
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
         file1, dirToCheck = gui.extractFileAndDir()
         similarFiles = compareFile2Dir(file1, dirToCheck)
         if not similarFiles:
-            message = 'Thed dir does not contain similar files to the given one.'
+            message = 'The dir does not contain similar files to the given one.'
         else:
             message = 'Some of the files in the dir have similarities with the given file.\n These files are: [' + ',\n'.join(similarFiles) + ']'
 
@@ -130,7 +130,7 @@ if __name__ == '__main__':
         dirToCheck = gui.extractDir()[0]
         similarFiles = compareFilesInDir(dirToCheck)
         if not similarFiles:
-            message = 'Thed dir does not contain similar files.'
+            message = 'The dir does not contain similar files.'
         else:
             message = 'The dir contains similar files.\n Here are the similar files in format <file1>: [<similarFile>, <percentSimilarity>]: \n ' + pretty(similarFiles)
         gui.popupResult(message)
