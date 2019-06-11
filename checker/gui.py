@@ -34,15 +34,19 @@ class GUI:
         return (structureFilename, filename1)
 
     def extractFileAndDir(self):
-        event, (filename, dirname) = sg.Window('Compare a single file to all files in dir'). Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()],
+        window = sg.Window('Compare a single file to all files in dir')
+        event, (filename, dirname) = window. Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()],
             [sg.Text('Dir to check')], [sg.Input(), sg.FolderBrowse()], [sg.OK(), sg.Cancel()]]).Read()
 
+        window.Close()
         return (filename, dirname)
 
     def extractStructureFileAndDir(self):
-        event, (structureFilename, dirname) = sg.Window('Check the structure of html files in dir'). Layout([[sg.Text('Structure file')], [sg.Input(), sg.FileBrowse()],
+        window = sg.Window('Check the structure of html files in dir')
+        event, (structureFilename, dirname) = window. Layout([[sg.Text('Structure file')], [sg.Input(), sg.FileBrowse()],
             [sg.Text('Dir to check')], [sg.Input(), sg.FolderBrowse()], [sg.OK(), sg.Cancel()]]).Read()
 
+        window.Close()
         return (structureFilename, dirname)
 
     def extractDir(self):
@@ -62,26 +66,71 @@ class GUI:
         sg.Popup('Result', 'Similar files: ' + str(comparator.compare(fileNameToCheck, dirName2ToCheck)))
 
 
+def pretty(d, indent=0):
+    result = ''
+    for key, value in d.items():
+        result += ('\t' * indent + str(key)) + '\n'
+
+        if isinstance(value, dict):
+            result += pretty(value, indent + 1)
+        else:
+            result += ('\t' * (indent + 1) + str(value)) + '\n'
+    return result
+
+
 if __name__ == '__main__':
     gui = GUI()
     usecase = gui.extractUsecase()
+    message = ''
 
     if usecase == 'cmpTwoFiles':
         file1, file2 = gui.extractFiles()
-        gui.popupResult(compareTwoFiles(file1, file2))
+        fuzzy_similarity = compareTwoFiles(file1, file2)
+        if fuzzy_similarity > 0:
+            message = 'The files are with similatities. \n Percentage similatities: ' + str(fuzzy_similarity)
+        else:
+            message = 'The files have no similarities.'
+
+        gui.popupResult(message)
 
     elif usecase == 'checkStructure':
         structureFile, file1 = gui.extractStructureFileAndFile1()
-        gui.popupResult(isFileStructureTheSame(structureFile, file1))
+        isSame, percentage = isFileStructureTheSame(structureFile, file1)
+        if isSame is True:
+            message = 'The file complies with the given structure. \n'
+        else:
+            message = 'The file does not comply with the given structure. \n'
+        message += ('Percentage similarities between the structures: ' + str(percentage))
+
+        gui.popupResult(message)
 
     elif usecase == 'checkStructureDir':
         structureFile, dirToCheck = gui.extractStructureFileAndDir()
-        gui.popupResult(isDirStructureTheSame(structureFile, dirToCheck))
+        result = isDirStructureTheSame(structureFile, dirToCheck)
+        isSame = result[0]
+        wrongFiles = result[1:]
+        if isSame is True:
+            message = 'The files in the dir complies with the given structure. \n'
+        else:
+            message = 'Some files do not comply with the given structure. \n These files are: [' + ',\n'.join(wrongFiles) + ']'
+
+        gui.popupResult(message)
 
     elif usecase == 'cmpFile2Dir':
         file1, dirToCheck = gui.extractFileAndDir()
-        gui.popupResult(compareFile2Dir(file1, dirToCheck))
+        similarFiles = compareFile2Dir(file1, dirToCheck)
+        if not similarFiles:
+            message = 'Thed dir does not contain similar files to the given one.'
+        else:
+            message = 'Some of the files in the dir have similarities with the given file.\n These files are: [' + ',\n'.join(similarFiles) + ']'
+
+        gui.popupResult(message)
 
     elif usecase == 'cmpFilesInDir':
         dirToCheck = gui.extractDir()[0]
-        gui.popupResult(compareFilesInDir(dirToCheck))
+        similarFiles = compareFilesInDir(dirToCheck)
+        if not similarFiles:
+            message = 'Thed dir does not contain similar files.'
+        else:
+            message = 'The dir contains similar files.\n Here are the similar files in format <file1>: [<similarFile>, <percentSimilarity>]: \n ' + pretty(similarFiles)
+        gui.popupResult(message)

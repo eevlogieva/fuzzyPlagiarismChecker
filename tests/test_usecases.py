@@ -25,13 +25,13 @@ class UsecasesTests:
             assert compareTwoFiles('./resources/nonExistant.html', './resources/simpleFile.html')
 
     def test_isFileStructureTheSame_expectTrue(self):
-        assert isFileStructureTheSame('./resources/simpleStructure.txt', './resources/simpleFile.html') is True
+        assert isFileStructureTheSame('./resources/simpleStructure.txt', './resources/simpleFile.html') == (True, 100)
 
     def test_isFileStructureTheSame_expectFalse(self):
         assert isFileStructureTheSame('./resources/complicatedStructure.txt', './resources/simpleFile.html') == (False, 0)
 
     def test_isDirStructureTheSame_expectTrue(self):
-        assert isDirStructureTheSame('./resources/simpleStructure.txt', './resources/toTestDirStructureTheSame') is True
+        assert isDirStructureTheSame('./resources/simpleStructure.txt', './resources/toTestDirStructureTheSame') == (True, 100)
 
     def test_isDirStructureTheSame_expectFalse(self):
         diffStructFile = open('./resources/tempFile.html', 'w')

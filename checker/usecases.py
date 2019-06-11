@@ -18,7 +18,7 @@ def isFileStructureTheSame(structureFile, file1):
     if not realStructure == requiredStructure:
         comparator = Comparator()
         return (False, comparator.compareStrings(realStructure, requiredStructure))
-    return True
+    return (True, 100)
 
 
 # returns an array of the files that do not conform to the given structure
@@ -30,7 +30,7 @@ def isDirStructureTheSame(structureFile, dirToCheck):
                 filesWrongStructure.append(os.path.join(dirName, fname))
 
     if len(filesWrongStructure) == 0:
-        return True
+        return (True, 100)
     else:
         return filesWrongStructure
 

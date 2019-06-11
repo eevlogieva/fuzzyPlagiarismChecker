@@ -6,6 +6,7 @@ checker/ssdeepComparator/__pycache__/
 tests/__pycache__/
 tests/integrationtests/__pycache__/
 tests/htmlParser/__pycache__/
+tests/ssdeepComparator/__pycache__/
 checker/*.py[cod]
 tests/*.py[cod]
 
