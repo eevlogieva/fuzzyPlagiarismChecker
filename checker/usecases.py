@@ -10,6 +10,8 @@ def compareTwoFiles(file1, file2):
 
 
 def isFileStructureTheSame(structureFile, file1):
+    if not str(file1).endswith('.html'):
+        raise TypeError('The file to check is not with format html.')
     htmlParser = MyHTMLParser()
     htmlParser.feed(open(file1, 'r').read())
     realStructure = htmlParser.getTags()

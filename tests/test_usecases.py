@@ -29,7 +29,11 @@ class UsecasesTests:
 
     def test_isFileStructureTheSame_expectFalse(self):
         assert isFileStructureTheSame('./resources/complicatedStructure.txt', './resources/simpleFile.html') == (False, 0)
-
+    
+    def test_isFileStructureTheSame_expectException(self):
+        with raises(TypeError):
+            assert isFileStructureTheSame('./resources/simpleStructure.txt', './resources/simpleStructure.txt')
+    
     def test_isDirStructureTheSame_expectTrue(self):
         assert isDirStructureTheSame('./resources/simpleStructure.txt', './resources/toTestDirStructureTheSame') == (True, 100)
 

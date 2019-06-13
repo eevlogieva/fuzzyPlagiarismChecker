@@ -3,67 +3,77 @@ from checker.usecases import *
 
 
 USECASES_DICT = {
-    'Compare two files': 'cmpTwoFiles',
-    'Check the structure of an html file': 'checkStructure',
-    'Check the structure of html files in dir': 'checkStructureDir',
-    'Compare a single file to all files in dir': 'cmpFile2Dir',
-    'Compare all the files in a dir': 'cmpFilesInDir'
+    'cmpTwoFiles': 'Compare two files',
+    'checkStructure': 'Check the structure of an html file',
+    'checkStructureDir': 'Check the structure of html files in dir',
+    'cmpFile2Dir': 'Compare a single file to all files in dir',
+    'cmpFilesInDir': 'Compare all the files in a dir'
 }
 
 
 class GUI:
     def extractUsecase(self):
-        layout = [[sg.InputCombo(list(USECASES_DICT.keys()))], [sg.OK(), sg.Cancel()]]
+        layout = [[sg.InputCombo(list(USECASES_DICT.values()))], [sg.OK(), sg.Cancel()]]
         window = sg.Window('Choose a usecase')
         (button, usecase_arr) = window.Layout(layout).Read()
+        if button == 'Cancel':
+            exit()
         window.Close()
-        return USECASES_DICT[usecase_arr[0]]
+        return [key for key, value in USECASES_DICT.items() if value == usecase_arr[0]][0]
 
     def extractFiles(self):
-        window = sg.Window('Compare two files for similarities')
+        window = sg.Window(USECASES_DICT['cmpTwoFiles'])
         event, (filename, filename2) = window. Layout([[sg.Text('First file')], [sg.Input(), sg.FileBrowse()], 
             [sg.Text('Second file')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()]]).Read()
+        if event == 'Cancel':
+            exit()
         window.Close()
         return (filename, filename2)
 
     def extractStructureFileAndFile1(self):
-        window = sg.Window('Check the structure of an html file')
+        window = sg.Window(USECASES_DICT['checkStructure'])
         event, (structureFilename, filename1) = window. Layout([[sg.Text('Structure file')], [sg.Input(), sg.FileBrowse()], 
             [sg.Text('File to check')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()]]).Read()
+        if event == 'Cancel':
+            exit()
         window.Close()
         return (structureFilename, filename1)
 
     def extractFileAndDir(self):
-        window = sg.Window('Compare a single file to all files in dir')
+        window = sg.Window(USECASES_DICT['cmpFile2Dir'])
         event, (filename, dirname) = window. Layout([[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()],
             [sg.Text('Dir to check')], [sg.Input(), sg.FolderBrowse()], [sg.OK(), sg.Cancel()]]).Read()
-
+        if event == 'Cancel':
+            exit()
         window.Close()
         return (filename, dirname)
 
     def extractStructureFileAndDir(self):
-        window = sg.Window('Check the structure of html files in dir')
+        window = sg.Window(USECASES_DICT['checkStructureDir'])
         event, (structureFilename, dirname) = window. Layout([[sg.Text('Structure file')], [sg.Input(), sg.FileBrowse()],
             [sg.Text('Dir to check')], [sg.Input(), sg.FolderBrowse()], [sg.OK(), sg.Cancel()]]).Read()
-
+        if event == 'Cancel':
+            exit()
         window.Close()
         return (structureFilename, dirname)
 
     def extractDir(self):
-        window = sg.Window('Compare all the files in a dir')
+        window = sg.Window(USECASES_DICT['cmpFilesInDir'])
         event, dirname = window. Layout([[sg.Text('Dir to check')], [sg.Input(), sg.FolderBrowse()], 
             [sg.OK(), sg.Cancel()]]).Read()
+        if event == 'Cancel':
+            exit()        
         window.Close()
         return dirname
 
     def popupResult(self, stringToPrint):
         sg.Popup(stringToPrint)
 
-    def check_file_2_dir(self):
-        fileNameToCheck, dirName2ToCheck = self.extract_file_and_dir()
-
-        comparator = Comparator()
-        sg.Popup('Result', 'Similar files: ' + str(comparator.compare(fileNameToCheck, dirName2ToCheck)))
+    def validateInput(self, args):
+        for arg in args:
+            if arg == '':
+                self.popupResult('ERROR! \n Some of the field names were left blank!')
+                exit()
 
 
 def pretty(d, indent=0):
@@ -85,6 +95,7 @@ if __name__ == '__main__':
 
     if usecase == 'cmpTwoFiles':
         file1, file2 = gui.extractFiles()
+        gui.validateInput([file1, file2])
         fuzzy_similarity = compareTwoFiles(file1, file2)
         if fuzzy_similarity > 0:
             message = 'The files are with similatities. \n Percentage similatities: ' + str(fuzzy_similarity)
@@ -95,17 +106,22 @@ if __name__ == '__main__':
 
     elif usecase == 'checkStructure':
         structureFile, file1 = gui.extractStructureFileAndFile1()
-        isSame, percentage = isFileStructureTheSame(structureFile, file1)
-        if isSame is True:
-            message = 'The file complies with the given structure. \n'
-        else:
-            message = 'The file does not comply with the given structure. \n'
-            message += ('Percentage similarities between the structures: ' + str(percentage))
+        gui.validateInput([structureFile, file1])
+        try:
+            isSame, percentage = isFileStructureTheSame(structureFile, file1)
+            if isSame is True:
+                message = 'The file complies with the given structure. \n'
+            else:
+                message = 'The file does not comply with the given structure. \n'
+                message += ('Percentage similarities between the structures: ' + str(percentage))
+        except TypeError as e:
+            message = 'ERROR! \n' + str(e)
 
         gui.popupResult(message)
 
     elif usecase == 'checkStructureDir':
         structureFile, dirToCheck = gui.extractStructureFileAndDir()
+        gui.validateInput([structureFile, dirToCheck])
         result = isDirStructureTheSame(structureFile, dirToCheck)
         isSame = result[0]
         wrongFiles = result[1:]
@@ -118,6 +134,7 @@ if __name__ == '__main__':
 
     elif usecase == 'cmpFile2Dir':
         file1, dirToCheck = gui.extractFileAndDir()
+        gui.validateInput([file1, dirToCheck])
         similarFiles = compareFile2Dir(file1, dirToCheck)
         if not similarFiles:
             message = 'The dir does not contain similar files to the given one.'
@@ -128,6 +145,7 @@ if __name__ == '__main__':
 
     elif usecase == 'cmpFilesInDir':
         dirToCheck = gui.extractDir()[0]
+        gui.validateInput([dirToCheck])
         similarFiles = compareFilesInDir(dirToCheck)
         if not similarFiles:
             message = 'The dir does not contain similar files.'
