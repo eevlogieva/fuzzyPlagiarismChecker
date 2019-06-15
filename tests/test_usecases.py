@@ -53,6 +53,10 @@ class UsecasesTests:
         result = compareFilesInDir('./resources/toTestRestrictedFiles')
         assert result == {}
 
+    def test_compareFilesInDir_expectNoSameFilesInDirWithHiddenFiles(self):
+        result = compareFilesInDir('./resources/toTestHiddenFiles')
+        assert result == {}
+
     def teardown_method(self):
         try:
             os.remove('./resources/tempFile.html')

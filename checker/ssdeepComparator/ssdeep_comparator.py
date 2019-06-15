@@ -46,8 +46,10 @@ class Comparator:
         hashedFiles = []
         for dirName, subdirList, fileList in os.walk(dirToProcess):
                 for fname in fileList:
-                    filePath = os.path.join(dirName, fname)
-                    hashedFiles.append((self.hashContentOfFile(filePath), filePath))
+                    # do not consider hidden files
+                    if not os.path.basename(fname).startswith('.'):
+                        filePath = os.path.join(dirName, fname)
+                        hashedFiles.append((self.hashContentOfFile(filePath), filePath))
         return hashedFiles
 
     def compareStrings(self, str1, str2):
