@@ -82,8 +82,10 @@ def pretty(d, indent=0):
         result += ('\t' * indent + str(key)) + '\n'
 
         if isinstance(value, list):
+            result += '['
             for elem in value:
-                result += str(elem) + '\n'
+                result += '\t' + str(elem) + '\n'
+            result += ']' + '\n'
         else:
             result += ('\t' * (indent + 1) + str(value)) + '\n'
     return result
