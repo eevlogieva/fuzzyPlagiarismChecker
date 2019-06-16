@@ -29,12 +29,11 @@ class Comparator:
     def extractSimilarFiles(self, dirToProcess):
         similarFilesDict = {}
         filesInDir = self.hashAllFilesInDir(dirToProcess)
-        for fileTuple in filesInDir:
+        for index, fileTuple in enumerate(filesInDir):
             currFileName = fileTuple[1]
             currFileHash = fileTuple[0]
-            filesInDir.remove(fileTuple)
             similarFiles = []
-            for innerFileTuple in filesInDir:
+            for innerFileTuple in filesInDir[index + 1:]:
                 similarityCoefficient = ssdeep.compare(currFileHash, innerFileTuple[0])
                 if similarityCoefficient > TRESHOLD:
                     similarFiles.append((innerFileTuple[1], similarityCoefficient))
