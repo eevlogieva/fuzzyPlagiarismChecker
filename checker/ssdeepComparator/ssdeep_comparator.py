@@ -7,6 +7,8 @@ TRESHOLD = 21
 
 
 class Comparator:
+    def __init__(self, ssdeepInstance=ssdeep):
+        self.ssdeep = ssdeepInstance
 
     def compare(self, firstFileName, secondFileOrDirName):
         hash1 = self.hashContentOfFile(firstFileName)
@@ -14,7 +16,7 @@ class Comparator:
         if os.path.isfile(secondFileOrDirName):
             secondFileName = secondFileOrDirName
             hash2 = self.hashContentOfFile(secondFileName)
-            return ssdeep.compare(hash1, hash2)
+            return self.ssdeep.compare(hash1, hash2)
         else:
             dirToCheck = secondFileOrDirName
             similar_files = []
@@ -22,7 +24,7 @@ class Comparator:
             for fileTuple in filesInDir:
                 currFileName = fileTuple[1]
                 currFileHash = fileTuple[0]
-                if ssdeep.compare(hash1, currFileHash) > TRESHOLD and firstFileName != currFileName:
+                if self.ssdeep.compare(hash1, currFileHash) > TRESHOLD and firstFileName != currFileName:
                     similar_files.append(currFileName)
             return similar_files
 
@@ -34,7 +36,7 @@ class Comparator:
             currFileHash = fileTuple[0]
             similarFiles = []
             for innerFileTuple in filesInDir[index + 1:]:
-                similarityCoefficient = ssdeep.compare(currFileHash, innerFileTuple[0])
+                similarityCoefficient = self.ssdeep.compare(currFileHash, innerFileTuple[0])
                 if similarityCoefficient > TRESHOLD:
                     similarFiles.append((innerFileTuple[1], similarityCoefficient))
             if similarFiles:
@@ -52,10 +54,10 @@ class Comparator:
         return hashedFiles
 
     def compareStrings(self, str1, str2):
-        hash1 = ssdeep.hash(str1)
-        hash2 = ssdeep.hash(str2)
+        hash1 = self.ssdeep.hash(str1)
+        hash2 = self.ssdeep.hash(str2)
 
-        return ssdeep.compare(hash1, hash2)
+        return self.ssdeep.compare(hash1, hash2)
 
     def hashContentOfFile(self, fileName):
         try:
@@ -63,8 +65,8 @@ class Comparator:
                 htmlParser = MyHTMLParser()
                 htmlParser.feed(open(fileName, 'r').read())
                 content = removeAllWhitespace(htmlParser.getContent())
-                return ssdeep.hash(content)
+                return self.ssdeep.hash(content)
             else:
-                return ssdeep.hash_from_file(fileName)
+                return self.ssdeep.hash_from_file(fileName)
         except IndexError:
-            return ssdeep.hash_from_file(fileName)
+            return self.ssdeep.hash_from_file(fileName)
