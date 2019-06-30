@@ -6,7 +6,7 @@ from pytest import mark
 class IntegrationTests:
     def test_cmpFile2Dir_expectOneSimilarFile(self):
         result = calculateResult(['--usecase', 'cmpFile2Dir', '--file1', './resources/copyOfSimpleFile.html', '--dir', './resources'])
-        assert './resources/simpleFile.html' in result
+        assert '/simpleFile.html' in result
 
     def test_cmpFile2Dir_expectNoSimilarFiles(self):
         assert calculateResult(['--usecase', 'cmpFile2Dir', '--file1', './pytest.ini', '--dir', './resources']) == []
@@ -28,14 +28,14 @@ class IntegrationTests:
 
     def test_checkStructureDir_expectTwoFIlesToNotConformTheStructure(self):
         result = calculateResult(['--usecase', 'checkStructureDir', '--dir', './resources', '--structureFile', './resources/complicatedStructure.txt'])
-        expectedFile = './resources/simpleFile.html'
-        expectedFile2 = './resources/copyOfSimpleFile.html'
+        expectedFile = 'simpleFile.html'
+        expectedFile2 = 'copyOfSimpleFile.html'
         assert expectedFile in result and expectedFile2 in result
 
     def test_cmpFilesInDir_expectTwoFIlesSame(self):
         result = calculateResult(['--usecase', 'cmpFilesInDir', '--dir', './resources'])
-        expectedFile = './resources/simpleFile.html'
-        expectedFile2 = './resources/copyOfSimpleFile.html'
+        expectedFile = '/simpleFile.html'
+        expectedFile2 = '/copyOfSimpleFile.html'
         assert expectedFile in result or expectedFile2 in result
 
     def test_cmpFilesInDir_expectNoSameFiles(self):

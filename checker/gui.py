@@ -66,8 +66,12 @@ class GUI:
         window.Close()
         return dirname
 
-    def popupResult(self, stringToPrint):
-        sg.Popup(stringToPrint)
+    def popupResult(self, windowTitle, message):
+        window = sg.Window(windowTitle)
+        event = window.Layout([[sg.Multiline(default_text=message, size=(100, 10), disabled=True)], [sg.OK()]]).Read()
+        if event == 'OK':
+            window.Close()
+            exit()
 
     def validateInput(self, args):
         for arg in args:
@@ -105,7 +109,7 @@ if __name__ == '__main__':
         else:
             message = 'The files have no similarities.'
 
-        gui.popupResult(message)
+        sg.Popup(message)
 
     elif usecase == 'checkStructure':
         structureFile, file1 = gui.extractStructureFileAndFile1()
@@ -120,7 +124,7 @@ if __name__ == '__main__':
         except TypeError as e:
             message = 'ERROR! \n' + str(e)
 
-        gui.popupResult(message)
+        sg.Popup(message)
 
     elif usecase == 'checkStructureDir':
         structureFile, dirToCheck = gui.extractStructureFileAndDir()
@@ -130,21 +134,22 @@ if __name__ == '__main__':
         wrongFiles = result[1:]
         if isSame is True:
             message = 'All the files in the dir comply with the given structure. \n'
+            sg.Popup(message)
         else:
-            message = 'Some files do not comply with the given structure. \n These files are: [' + ',\n'.join(wrongFiles) + ']'
-
-        gui.popupResult(message)
+            message = 'Some files in the dir do not comply with the given structure. \nDirname: ' + dirToCheck + '\nFiles that do not comply: [' + ', '.join(wrongFiles) + ']'
+            gui.popupResult('Result from checking the structure of html files in a dir', message)
 
     elif usecase == 'cmpFile2Dir':
         file1, dirToCheck = gui.extractFileAndDir()
         gui.validateInput([file1, dirToCheck])
         similarFiles = compareFile2Dir(file1, dirToCheck)
+        file1 = file1[len(dirToCheck):]
         if not similarFiles:
             message = 'The dir does not contain similar files to the given one.'
+            sg.Popup(message)
         else:
-            message = 'Some of the files in the dir have similarities with the given file.\n These files are: [' + ',\n'.join(similarFiles) + ']'
-
-        gui.popupResult(message)
+            message = 'Some of the files in the dir have similarities with the given file.\nDirname: ' + dirToCheck + '\nFiles, similar to ' + file1 + ': [' + ',\n'.join(similarFiles) + ']'
+            gui.popupResult('Result from comparing a file to files in a dir', message)
 
     elif usecase == 'cmpFilesInDir':
         dirToCheck = gui.extractDir()[0]
@@ -152,6 +157,7 @@ if __name__ == '__main__':
         similarFiles = compareFilesInDir(dirToCheck)
         if not similarFiles:
             message = 'The dir does not contain similar files.'
+            sg.Popup(message)
         else:
-            message = 'The dir contains similar files.\n Here are the similar files in format <file1>: [<similarFile>, <percentSimilarity>]: \n ' + pretty(similarFiles)
-        gui.popupResult(message)
+            message = 'The dir ' + dirToCheck + ' contains similar files.\nThe result is also saved in the file /fuzzyPlagiarismChecker/resultReport.html\nHere are the similar files in format <file1>: [<similarFile>, <percentSimilarity>]: \n ' + pretty(similarFiles)
+            gui.popupResult('Result from comparing files in a dir', message)

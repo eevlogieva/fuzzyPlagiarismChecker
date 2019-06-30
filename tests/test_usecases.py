@@ -41,12 +41,12 @@ class UsecasesTests:
         diffStructFile = open('./resources/tempFile.html', 'w')
         diffStructFile.write('<head>Head</head>')
         result = isDirStructureTheSame('./resources/simpleStructure.txt', './resources')
-        assert './resources/tempFile.html' in result
+        assert 'tempFile.html' in result
 
     def test_compareFilesInDir_expectTwoFIlesSame(self):
         result = compareFilesInDir('./resources')
-        expectedFile = './resources/simpleFile.html'
-        expectedFile2 = './resources/copyOfSimpleFile.html'
+        expectedFile = '/simpleFile.html'
+        expectedFile2 = '/copyOfSimpleFile.html'
         assert expectedFile in result or expectedFile2 in result
 
     def test_compareFilesInDir_expectNoSameFiles(self):

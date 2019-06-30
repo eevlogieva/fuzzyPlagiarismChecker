@@ -29,7 +29,7 @@ def isDirStructureTheSame(structureFile, dirToCheck):
     for dirName, subdirList, fileList in os.walk(dirToCheck):
         for fname in fileList:
             if str(fname).endswith('.html') and (isFileStructureTheSame(structureFile, os.path.join(dirName, fname)) == (False, 0)):
-                filesWrongStructure.append(os.path.join(dirName, fname))
+                filesWrongStructure.append(os.path.join(fname))
 
     if len(filesWrongStructure) == 0:
         return (True, 100)

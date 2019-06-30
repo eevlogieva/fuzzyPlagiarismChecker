@@ -25,7 +25,7 @@ class Comparator:
                 currFileName = fileTuple[1]
                 currFileHash = fileTuple[0]
                 if self.ssdeep.compare(hash1, currFileHash) > TRESHOLD and firstFileName != currFileName:
-                    similar_files.append(currFileName)
+                    similar_files.append(currFileName[len(dirToCheck):])
             return similar_files
 
     def extractSimilarFiles(self, dirToProcess):
@@ -38,9 +38,12 @@ class Comparator:
             for innerFileTuple in filesInDir[index + 1:]:
                 similarityCoefficient = self.ssdeep.compare(currFileHash, innerFileTuple[0])
                 if similarityCoefficient > TRESHOLD:
-                    similarFiles.append((innerFileTuple[1], similarityCoefficient))
+                    similarFiles.append((innerFileTuple[1][len(dirToProcess):], similarityCoefficient))
             if similarFiles:
-                similarFilesDict[currFileName] = similarFiles
+                similarFilesDict[currFileName[len(dirToProcess):]] = similarFiles
+        if similarFilesDict:
+            htmlParser = MyHTMLParser()
+            htmlParser.generateHTMLReport(dirToProcess, similarFilesDict)
         return similarFilesDict
 
     def hashAllFilesInDir(self, dirToProcess):
