@@ -159,5 +159,5 @@ if __name__ == '__main__':
             message = 'The dir does not contain similar files.'
             sg.Popup(message)
         else:
-            message = 'The dir ' + dirToCheck + ' contains similar files.\nThe result is also saved in the file /fuzzyPlagiarismChecker/resultReport.html\nHere are the similar files in format <file1>: [<similarFile>, <percentSimilarity>]: \n ' + pretty(similarFiles)
+            message = 'The dir ' + dirToCheck + ' contains similar files.\nThe result is also saved in the file /fuzzyPlagiarismChecker/resultReport.xml\nHere are the similar files in format <file1>: [<similarFile>, <percentSimilarity>]: \n ' + pretty(similarFiles)
             gui.popupResult('Result from comparing files in a dir', message)

@@ -23,7 +23,7 @@ class MyHTMLParser(HTMLParser):
         return self.extractedContent
 
     def generateHTMLReport(self, dirToReportFor, dictToWrite):
-        report = open('resultReport.html', 'w')
+        report = open('resultReport.xml', 'w')
         report.write('<dir>' + '\n' + '\t' + '<dirname>' + dirToReportFor + '</dirname>' + '\n')
         for key in dictToWrite:
             report.write('\t' + '<file>' + '\n' + str(2 * '\t') + '<filename>' + key + '</filename>' + '\n')
