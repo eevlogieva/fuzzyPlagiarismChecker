@@ -4,8 +4,8 @@ from html.parser import HTMLParser
 class MyHTMLParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
-        self.extractedTags = ""
-        self.extractedContent = ""
+        self.extractedTags = ''
+        self.extractedContent = ''
 
     def handle_starttag(self, tag, attrs):
         self.extractedTags += ('<' + tag + '>')
@@ -15,6 +15,10 @@ class MyHTMLParser(HTMLParser):
 
     def handle_data(self, data):
         self.extractedContent += (data + '\n')
+
+    # a very very basic validity check for html file
+    def isValidHtml(self):
+        return '<html>' in self.extractedTags and '</html>' in self.extractedTags
 
     def getTags(self):
         return removeAllWhitespace(self.extractedTags)

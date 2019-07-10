@@ -50,6 +50,9 @@ class Comparator:
         hashedFiles = []
         for dirName, subdirList, fileList in os.walk(dirToProcess):
                 for fname in fileList:
+                    # to speed-up the program by default process only .html, .css, .xml, .txt, .doc, .pdf files
+                    if fname.split('.')[1] not in ['html', 'css', 'xml', 'txt', 'doc', 'pdf']:
+                        continue
                     # do not consider hidden files
                     if not os.path.basename(fname).startswith('.'):
                         filePath = os.path.join(dirName, fname)

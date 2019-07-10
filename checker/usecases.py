@@ -14,6 +14,9 @@ def isFileStructureTheSame(structureFile, file1):
         raise TypeError('The file to check is not with format html.')
     htmlParser = MyHTMLParser()
     htmlParser.feed(open(file1, 'r').read())
+    isValidHtml = htmlParser.isValidHtml()
+    if not isValidHtml:
+        raise TypeError('The file to check is not a valid html file.')
     realStructure = htmlParser.getTags()
     requiredStructure = removeAllWhitespace(open(structureFile, 'r').read())
 

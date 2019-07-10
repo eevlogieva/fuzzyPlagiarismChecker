@@ -7,4 +7,4 @@ def test_parseTags():
     fileContent = open('./resources/simpleFile.html', 'r').read()
     htmlParser = MyHTMLParser()
     htmlParser.feed(fileContent)
-    assert htmlParser.getTags() == "<head></head><body></body>"
+    assert htmlParser.getTags() == "<html><head></head><body></body></html>"

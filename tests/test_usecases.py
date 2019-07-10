@@ -29,25 +29,31 @@ class UsecasesTests:
 
     def test_isFileStructureTheSame_expectFalse(self):
         assert isFileStructureTheSame('./resources/complicatedStructure.txt', './resources/simpleFile.html') == (False, 0)
-    
-    def test_isFileStructureTheSame_expectException(self):
+
+    def test_isFileStructureTheSame_noHtmlExtension_expectException(self):
         with raises(TypeError):
             assert isFileStructureTheSame('./resources/simpleStructure.txt', './resources/simpleStructure.txt')
-    
+
+    def test_isFileStructureTheSame_noValidHtml_expectException(self):
+        with raises(TypeError):
+            assert isFileStructureTheSame('./resources/simpleStructure.txt', './resources/toTestNoValidHtml/noValidHtml.html')
+
     def test_isDirStructureTheSame_expectTrue(self):
         assert isDirStructureTheSame('./resources/simpleStructure.txt', './resources/toTestDirStructureTheSame') == (True, 100)
 
     def test_isDirStructureTheSame_expectFalse(self):
-        diffStructFile = open('./resources/tempFile.html', 'w')
-        diffStructFile.write('<head>Head</head>')
-        result = isDirStructureTheSame('./resources/simpleStructure.txt', './resources')
-        assert 'tempFile.html' in result
+        result = isDirStructureTheSame('./resources/complicatedStructure.txt', './resources/toTestDirStructureTheSame')
+        assert 'simpleFile.html' in result
 
     def test_compareFilesInDir_expectTwoFIlesSame(self):
         result = compareFilesInDir('./resources')
         expectedFile = '/simpleFile.html'
         expectedFile2 = '/copyOfSimpleFile.html'
         assert expectedFile in result or expectedFile2 in result
+
+    def test_compareFilesInDir_expectMDFilesNotConsidered(self):
+        result = compareFilesInDir('./resources')
+        assert 'test1.md' not in result and 'test2.md' not in result
 
     def test_compareFilesInDir_expectNoSameFiles(self):
         result = compareFilesInDir('./resources/toTestRestrictedFiles')

@@ -24,13 +24,12 @@ class IntegrationTests:
         assert calculateResult(['--usecase', 'checkStructure', '--file1', './resources/simpleFile.html', '--structureFile', './resources/complicatedStructure.txt']) == (False, 0)
 
     def test_checkStructureDir_expectTrue(self):
-        assert calculateResult(['--usecase', 'checkStructureDir', '--dir', './resources', '--structureFile', './resources/simpleStructure.txt'])
+        assert calculateResult(['--usecase', 'checkStructureDir', '--dir', './resources/toTestDirStructureTheSame', '--structureFile', './resources/simpleStructure.txt'])
 
-    def test_checkStructureDir_expectTwoFIlesToNotConformTheStructure(self):
-        result = calculateResult(['--usecase', 'checkStructureDir', '--dir', './resources', '--structureFile', './resources/complicatedStructure.txt'])
+    def test_checkStructureDir_expectFileToNotConformTheStructure(self):
+        result = calculateResult(['--usecase', 'checkStructureDir', '--dir', './resources/toTestDirStructureTheSame', '--structureFile', './resources/complicatedStructure.txt'])
         expectedFile = 'simpleFile.html'
-        expectedFile2 = 'copyOfSimpleFile.html'
-        assert expectedFile in result and expectedFile2 in result
+        assert expectedFile in result
 
     def test_cmpFilesInDir_expectTwoFIlesSame(self):
         result = calculateResult(['--usecase', 'cmpFilesInDir', '--dir', './resources'])
